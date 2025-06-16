@@ -8,11 +8,11 @@ const jump = () => {
         dino.classList.remove('jump');
         
     }, 500);
-}
+}  
 
-    const loop = setInterval( () => {
-
-        const cactoPosition = cacto.offsetLeft;
+//funcao de colisao
+function handleColision() {
+      const cactoPosition = cacto.offsetLeft;
         const dinoPosition = +window.getComputedStyle(dino).bottom.replace('px', '');
         console.log(dinoPosition)
         if(cactoPosition <= 85 && cactoPosition >0 && dinoPosition <80) {
@@ -27,15 +27,27 @@ const jump = () => {
             dino.style.width= '100px'
             dino.style.bottom= '-20px'
             dino.style.marginLeft= '5px'
-             stopGame(); // Chama a função para parar o jogo
-
+            
+            
             clearInterval(loop);
+            stopGame();
         }
-    }, 10)
+}
 
-document.addEventListener("keydown", jump);
+//inica o loop pela funcao
+const loop = setInterval( () => handleColision(),10);
 
-    const scoreElement = document.getElementById('score');
+
+document.body.onkeyup = function(e) {
+  if (e.key == " " ||
+      e.code == "Space" ||      
+      e.keyCode == 32      
+  ) {
+    jump();
+  }
+}
+
+const scoreElement = document.getElementById('score');
 let currentScore = 0;
 let highScore = 0;
 let gameSpeed = 100; // Milliseconds for score update, adjust for game speed
@@ -111,8 +123,10 @@ function restartGame() {
     // Reinicia o placar
     startGame();
 
-    ;
+    // Reinicia o loop de colisão
+    loop = setInterval(() => handleColision(), 10);     
 }
+
 
 
 // Inicia o jogo (você pode chamar isso quando o jogo começar de fato)
