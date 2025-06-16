@@ -27,6 +27,7 @@ const jump = () => {
             dino.style.width= '100px'
             dino.style.bottom= '-20px'
             dino.style.marginLeft= '5px'
+             stopGame(); // Chama a função para parar o jogo
 
             clearInterval(loop);
         }
@@ -77,13 +78,42 @@ function startGame() {
 // Função para parar o jogo (quando o dinossauro morre)
 function stopGame() {
     clearInterval(scoreInterval);
+
     if (currentScore > highScore) {
         highScore = currentScore;
-        localStorage.setItem('dinoHighScore', highScore); // Salva o novo highScore
+        localStorage.setItem('dinoHighScore', highScore);
     }
-    // Aqui você pode adicionar a lógica de "Game Over"
-    console.log("Game Over! Final Score:", currentScore, "High Score:", highScore);
+
+    // Atualiza o texto da pontuação final
+    const finalScoreElement = document.getElementById('final-score');
+    finalScoreElement.textContent = `Sua pontuação: ${formatScore(currentScore)}`;
+
+    // Exibe a tela de Game Over
+    const gameOverScreen = document.getElementById('game-over-screen');
+    gameOverScreen.style.display = 'flex';
 }
+
+function restartGame() {
+    // Oculta a tela de Game Over
+    const gameOverScreen = document.getElementById('game-over-screen');
+    gameOverScreen.style.display = 'none';
+
+    // Reinicia posições e animações
+    cacto.style.animation = 'cacto-animation 1.5s infinite linear';
+    cacto.style.left = '';
+
+    dino.style.animation = '';
+    dino.style.bottom = '0px';
+    dino.src = './images/dino/dino gif.gif';
+    dino.style.width = '100px';
+    dino.style.marginLeft = '0px';
+
+    // Reinicia o placar
+    startGame();
+
+    ;
+}
+
 
 // Inicia o jogo (você pode chamar isso quando o jogo começar de fato)
 startGame();
